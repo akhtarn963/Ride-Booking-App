@@ -107,7 +107,7 @@ For local development:
 ### 1. Clone the repository
 
 ```bash
-git clone <YOUR_GITHUB_REPOSITORY_URL>
+git clone https://github.com/akhtarn963/Ride-Booking-App.git
 cd ride-booking
 ```
 
