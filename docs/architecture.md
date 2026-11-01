@@ -266,3 +266,15 @@ Potential improvements include:
 The implementation separates controllers from business logic using dedicated services. Database transactions, row-level locking, unique constraints, and idempotency records help maintain data integrity during booking and assignment operations.
 
 The architecture provides a foundation that can be extended with authentication, real-time communication, mapping, and production infrastructure.
+
+### PostgreSQL Integration Tests
+
+A separate PostgreSQL integration test suite verifies the database-level
+constraints that prevent:
+
+- A driver from having multiple active ride assignments.
+- A ride from having multiple active driver assignments.
+
+These tests run against a dedicated `ride_booking_test` database using
+`phpunit.pgsql.xml`. The SQLite feature suite and PostgreSQL integration
+suite are executed separately.

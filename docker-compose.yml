@@ -43,6 +43,8 @@ services:
     image: postgres:18-alpine
     container_name: ride-booking-db
     restart: unless-stopped
+    ports:
+      - "5433:5432"
     environment:
       POSTGRES_DB: ride_booking
       POSTGRES_USER: ride_user
