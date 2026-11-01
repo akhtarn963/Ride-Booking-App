@@ -1,0 +1,59 @@
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ride-booking-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: ${APP_KEY}
+      APP_URL: http://localhost:8000
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: ride_booking
+      DB_USERNAME: ride_user
+      DB_PASSWORD: ${DB_PASSWORD}
+      SESSION_DRIVER: file
+      CACHE_STORE: file
+      QUEUE_CONNECTION: database
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: http://localhost:8000/api
+    container_name: ride-booking-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      - app
+
+  db:
+    image: postgres:18-alpine
+    container_name: ride-booking-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ride_booking
+      POSTGRES_USER: ride_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ride_user -d ride_booking"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres_data:
